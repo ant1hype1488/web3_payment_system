@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import {useState} from 'react';
 import {ethers} from "ethers";
@@ -8,8 +7,17 @@ function App() {
     const [walletAdress,setWalletAddress] = useState("")
     const contractAdress = "0x6A0162E2E7A2eef9b1926bE6276C744b86af952B"
     const subCost = {value: ethers.utils.parseEther("0.01")}
-    async function subEndTime(timestamp){
-        return new Date(timestamp).toLocaleDateString("en-US");
+    async function subEndTime(time){
+        const hex = time['_hex'].toString(16);
+        const timestamp =  parseInt(hex, 16);
+        // var date = new Date(timestamp * 1000);
+        // var hours = date.getHours();
+        // var minutes = "0" + date.getMinutes();
+        // var seconds = "0" + date.getSeconds();
+        // return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        return  new Date(timestamp * 1000)
+
+
     }
 
     async function callContract(){
@@ -21,7 +29,9 @@ function App() {
         const user = await contract.getUser();
         const sub = await contract.isActive();
         if (sub){
-            console.log(await contract.subEnd());
+            const time = await contract.subEnd()
+            const date = await subEndTime(time)
+            console.log(date)
         }
 
 
@@ -49,6 +59,15 @@ function App() {
                 });
 
                 // document.querySelector(".user_info").append(document.createElement('div').innerHTML = "<button>pay sub</button>")
+            } else{
+
+                const time = await contract.subEnd()
+                const date = await subEndTime(time)
+                div = document.createElement('div');
+                div.innerHTML = `sub end time: ${date.toDateString()}<br>`
+                document.querySelector(".user_info").append(div)
+
+
             }
 
         } else{
