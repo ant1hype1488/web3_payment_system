@@ -18,7 +18,7 @@ contract PaymentSystem {
         contractAdrr = address(this);
     }
    
-    function balanceOf() external view returns(uint){
+    function balanceOf() public view returns(uint){
         return address(this).balance ;
     }
     function isActive() public view returns(bool) {
@@ -32,7 +32,7 @@ contract PaymentSystem {
        
         return users[msg.sender].subscription;
     }
-    function createUser(string memory _nickname) public{
+    function createUser(string memory _nickname) public {
         require(users[msg.sender].subscription == 0 ,"User exist");
         users[msg.sender].regTime = block.timestamp;
         users[msg.sender].nickname = _nickname;
@@ -41,6 +41,15 @@ contract PaymentSystem {
       function getUser( ) public view  returns( string memory){
         return users[msg.sender].nickname;
         
+    }
+    function setSubTime(uint _expiraion) public  {
+        require(msg.sender == Owner,"u are not avaible to set vars");
+        expiraion = _expiraion;
+        
+    }
+    function setSubPay(uint _price) public  {
+        require(msg.sender == Owner,"u are not avaible to set vars");
+        price = _price;
     }
 
     function paySub() public payable {
